@@ -5,30 +5,37 @@
 #pragma once
 #include <cstdint>
 #include <string>
+#include <vector>
+#include <array>
 
 using Byte = uint8_t;
 using Word = uint16_t;
 
 class Cpu {
 
+public:
+    Cpu(); // CPU constructor
+    ~Cpu(); // Cpu destructor
+
+
+
+    Byte a = 0x00; // Accumulator Register
+    Byte x = 0x00; // X Register
+    Byte y = 0x00; // Y Register
+
+    Byte s = 0x00; // Stack Pointer
+    Word pc = 0x0000; // Program Counter
+    Byte p = 0x00; // Processor Status | Ordering of flags are: N(7-Negative), V(6-Overflow), -(5-Expansion), B(4-Break Command), D(3-Decimal), I(2-Interrupt Disable), Z(1-Zero), C(0-Carry)
+
 private:
-    Byte a; // Accumulator Register
-    Byte x; // X Register
-    Byte y; // Y Register
-
-    Byte s; // Stack Pointer
-    Word pc; // Program Counter
-    Byte p; // Processor Status | Ordering of flags are: N(7-Negative), V(6-Overflow), -(5-Expansion), B(4-Break Command), D(3-Decimal), I(2-Interrupt Disable), Z(1-Zero), C(0-Carry)
-
-
-    struct Instructions { // This struct handles the creation of the instruction set made up of both the opcode and the addressing mode
-        std::string name;
-        Byte Cpu::*addressMode = nullptr;
-        Byte Cpu::*opcode = nullptr;
-        Byte cycles = 0;
+    struct instructions { // This struct handles the creation of the instruction set made up of both the opcode and the addressing mode
+        std::string name; // Name of instruction
+        Byte (Cpu::*addressMode) (void) = nullptr; // Instruction addressing mode
+        Byte (Cpu::*opcode) (void) = nullptr; // Instruction opcode
+        Byte cycles = 0; // Instructions number of cycles
     };
 
-    Instructions lookupTable[256];
+    instructions lookupTable[256]; // Table that contains the names, functions, and cycles needed for each instruction
 
     // Address Modes
     Byte ACC(); // Accumulator
@@ -103,6 +110,7 @@ private:
     Byte TXA(); // Transfer X to accumulator
     Byte TXS(); // Transfer X to stack pointer
     Byte TYA(); // Transfer Y to accumulator
+    Byte XXX(); // Unofficial Opcode
 
 };
 

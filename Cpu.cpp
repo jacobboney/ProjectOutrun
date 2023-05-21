@@ -28,7 +28,7 @@ Cpu::Cpu() {
     lookupTable[14] = {"ASL", &Cpu::ASL, &Cpu::ABS, 6}; // ASL - Arithmetic Shift Left | Absolute | Opcode: $0E
     lookupTable[15] = {"???", &Cpu::XXX, &Cpu::IMP, 2}; // ??? - Unofficial
 
-    // Row 1 /////////////////////////
+    // Row 1
     lookupTable[16] = {"BPL", &Cpu::BPL, &Cpu::REL, 2}; // BPL - Branch on Result Plus | Relative | Opcode: $10
     lookupTable[17] = {"ORA", &Cpu::ORA, &Cpu::ZPY, 4}; // ORA - "OR" Memory with Accumulator | Zero Page Indirect Y-Indexed | Opcode: $11
     lookupTable[18] = {"???", &Cpu::XXX, &Cpu::IMP, 2}; // ??? - Unofficial
@@ -119,7 +119,7 @@ Cpu::Cpu() {
     lookupTable[94] = {"LSR", &Cpu::LSR, &Cpu::ABX, 7}; // LSR - Logical Shift Right | X-Indexed Absolute | Opcode: $5E
     lookupTable[95] = {"???", &Cpu::XXX, &Cpu::IMP, 2}; // ??? - Unofficial
 
-    // Row 6 ///////////////////////
+    // Row 6
     lookupTable[96] = {"RTS", &Cpu::RTS, &Cpu::IMP, 6}; // RTS - Return From Subroutme | Implied | Opcode: $60
     lookupTable[97] = {"ADC", &Cpu::ADC, &Cpu::IDX, 6}; // ADC - Add Memory to Accumulator with Carry | X-Indexed Zero Page Indirect | Opcode: $61
     lookupTable[98] = {"???", &Cpu::XXX, &Cpu::IMP, 2}; // ??? - Unofficial
@@ -300,19 +300,19 @@ Cpu::Cpu() {
     lookupTable[254] = {"INC", &Cpu::INC, &Cpu::ABX, 7}; // INC - Increment Memory By One | X-Indexed Absolute | Opcode: $FE
     lookupTable[255] = {"???", &Cpu::XXX, &Cpu::IMP, 2}; // ??? - Unofficial
 
-
-
-
-
-
-
-
-
 }
 
 
 // Destructor
 Cpu::~Cpu() = default;
+
+Byte Cpu::read(Word address) {
+    return bus->read(address, false);
+}
+
+void Cpu::write(Word address, Byte data) {
+    bus->write(address, data);
+}
 
 
 // Address Mode Definitions

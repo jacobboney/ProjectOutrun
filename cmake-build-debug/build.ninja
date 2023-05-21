@@ -61,6 +61,12 @@ build CMakeFiles/ProjectOutrun.dir/Cpu.cpp.obj: CXX_COMPILER__ProjectOutrun_Debu
   OBJECT_DIR = CMakeFiles\ProjectOutrun.dir
   OBJECT_FILE_DIR = CMakeFiles\ProjectOutrun.dir
 
+build CMakeFiles/ProjectOutrun.dir/Bus.cpp.obj: CXX_COMPILER__ProjectOutrun_Debug C$:/GitHub$ Repos/ProjectOutrun/Bus.cpp || cmake_object_order_depends_target_ProjectOutrun
+  DEP_FILE = CMakeFiles\ProjectOutrun.dir\Bus.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++23
+  OBJECT_DIR = CMakeFiles\ProjectOutrun.dir
+  OBJECT_FILE_DIR = CMakeFiles\ProjectOutrun.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target ProjectOutrun
@@ -69,7 +75,7 @@ build CMakeFiles/ProjectOutrun.dir/Cpu.cpp.obj: CXX_COMPILER__ProjectOutrun_Debu
 #############################################
 # Link the executable ProjectOutrun.exe
 
-build ProjectOutrun.exe: CXX_EXECUTABLE_LINKER__ProjectOutrun_Debug CMakeFiles/ProjectOutrun.dir/main.cpp.obj CMakeFiles/ProjectOutrun.dir/Cpu.cpp.obj
+build ProjectOutrun.exe: CXX_EXECUTABLE_LINKER__ProjectOutrun_Debug CMakeFiles/ProjectOutrun.dir/main.cpp.obj CMakeFiles/ProjectOutrun.dir/Cpu.cpp.obj CMakeFiles/ProjectOutrun.dir/Bus.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\ProjectOutrun.dir

@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Bus.h"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -17,7 +18,7 @@ public:
     Cpu(); // CPU constructor
     ~Cpu(); // Cpu destructor
 
-
+    void ConnectBus(Bus* n) { bus = n; }
 
     Byte a = 0x00; // Accumulator Register
     Byte x = 0x00; // X Register
@@ -27,7 +28,25 @@ public:
     Word pc = 0x0000; // Program Counter
     Byte p = 0x00; // Processor Status | Ordering of flags are: N(7-Negative), V(6-Overflow), -(5-Expansion), B(4-Break Command), D(3-Decimal), I(2-Interrupt Disable), Z(1-Zero), C(0-Carry)
 
+    void Clock();
+    void Reset();
+    void InterruptRequest();
+    void NonMaskableInterrupt();
+
+    Byte fetch();
+    Byte fetched = 0x00;
+
+    Word absoluteAddress = 0x0000;
+    Word relativeAddress = 0x0000;
+    Byte opcode = 0x00;
+    Byte cycles = 0;
+
 private:
+
+    Bus* bus = nullptr;
+    Byte read(Word address);
+    void write(Word address, Byte data);
+
     struct instructions { // This struct handles the creation of the instruction set made up of both the opcode and the addressing mode
         std::string name; // Name of instruction
         Byte (Cpu::*addressMode) (void) = nullptr; // Instruction addressing mode
@@ -53,7 +72,6 @@ private:
     Byte ZPY(); // Zero Page, Y-Indexed
 
     //Opcodes
-    //Add opcodes here and then declare in .cpp
     Byte ADC(); // Add with carry
     Byte AND(); // And (with accumulator)
     Byte ASL(); // Arithmetic Shift Left

@@ -3,4 +3,4 @@ project(ProjectOutrun)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(ProjectOutrun main.cpp Cpu.cpp Cpu.h)
+add_executable(ProjectOutrun main.cpp Cpu.cpp Cpu.h Bus.cpp Bus.h)

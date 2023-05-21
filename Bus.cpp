@@ -5,8 +5,8 @@
 #include "Bus.h"
 
 Bus::Bus() {
-    for(auto &i : ram) i = 0x00; // Sets all address locations to 0
     cpu.ConnectBus(this);
+    for(auto &i : ram) i = 0x00; // Sets all address locations to 0
 }
 
 Bus::~Bus() {}

@@ -3,7 +3,6 @@
 //
 
 #pragma once
-#include "Bus.h"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -11,6 +10,7 @@
 
 using Byte = uint8_t;
 using Word = uint16_t;
+class Bus;
 
 class Cpu {
 
@@ -18,7 +18,7 @@ public:
     Cpu(); // CPU constructor
     ~Cpu(); // Cpu destructor
 
-    void ConnectBus(Bus* n) { bus = n; }
+    void ConnectBus(Bus *n) { bus = n; }
 
     Byte a = 0x00; // Accumulator Register
     Byte x = 0x00; // X Register

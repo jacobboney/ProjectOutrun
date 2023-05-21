@@ -3,8 +3,9 @@
 //
 
 #pragma once
-#include <cstdint>
 #include "Cpu.h"
+#include <cstdint>
+#include <array>
 
 using Byte = uint8_t;
 using Word = uint16_t;

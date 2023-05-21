@@ -3,7 +3,7 @@
 //
 
 #include "Cpu.h"
-
+#include "Bus.h"
 
 // Constructor
 Cpu::Cpu() {

@@ -314,58 +314,165 @@ void Cpu::write(Word address, Byte data) {
     bus->write(address, data);
 }
 
+void Cpu::Clock() {
+
+    if(cycles == 0){
+        opcode = read(pc);
+        pc++;
+
+        cycles = lookupTable[opcode].cycles;
+
+        Byte additionalCycleFromAddress = (this->*lookupTable[opcode].addressMode)();
+        Byte additionalCycleFromOpcode = (this->*lookupTable[opcode].opcode)();
+
+        cycles += (additionalCycleFromAddress & additionalCycleFromOpcode);
+    }
+
+    cycles--;
+}
 
 // Address Mode Definitions
-Byte Cpu::ACC() {
-    return 0x00;
+Byte Cpu::ACC(){
+    fetched = a;
+    return 0;
 }
 
 Byte Cpu::ABS(){
-    return 0x00;
+    Word lowByte = read(pc);
+    pc++;
+    Word highByte = read(pc);
+    pc++;
+
+    absoluteAddress = (highByte << 8) | lowByte;
+
+    return 0;
 }
 
 Byte Cpu::ABX(){
-    return 0x00;
+    Word lowByte = read(pc);
+    pc++;
+    Word highByte = read(pc);
+    pc++;
+
+    absoluteAddress = ((highByte << 8) | lowByte) + x;
+
+    if((absoluteAddress & 0xFF00) != (highByte << 8)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 Byte Cpu::ABY(){
-    return 0x00;
+    Word lowByte = read(pc);
+    pc++;
+    Word highByte = read(pc);
+    pc++;
+
+    absoluteAddress = ((highByte << 8) | lowByte) + y;
+
+    if((absoluteAddress & 0xFF00) != (highByte << 8)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 Byte Cpu::IMM(){
-    return 0x00;
+    absoluteAddress = pc++;
+    return 0;
 }
 
 Byte Cpu::IMP(){
-    return 0x00;
+    fetched = a;
+    return 0;
 }
 
 Byte Cpu::IND(){
-    return 0x00;
+    Word lowByte;
+    Word highByte;
+
+    Word lowBytePointer = read(pc);
+    pc++;
+    Word highBytePointer = read(pc);
+    pc++;
+
+    Word tempAddress = (highBytePointer << 8) | lowBytePointer;
+
+    if(lowBytePointer == 0x00FF){
+        highByte = read(tempAddress & 0xFF00);
+    }
+    else{
+        highByte = read(tempAddress + 1);
+    }
+
+    lowByte = read(tempAddress);
+
+    absoluteAddress = (highByte << 8) | lowByte;
+
+    return 0;
 }
 
 Byte Cpu::IDX(){
-    return 0x00;
+    Word tempAddress = read(pc);
+    pc++;
+
+    Word lowByte = read((Word)(tempAddress + (Word)x) & 0x00FF);
+    Word highByte = read((Word)(tempAddress + (Word)x + 1) & 0x00FF);
+
+    absoluteAddress = (highByte << 8) | lowByte;
+
+    return 0;
 }
 
 Byte Cpu::IDY(){
-    return 0x00;
+    Word tempAddress = read(pc);
+    pc++;
+
+    Word lowByte = read(tempAddress & 0x00FF);
+    Word highByte = read(tempAddress & 0x00FF);
+
+    absoluteAddress = ((highByte << 8) | lowByte) + y;
+
+    if((absoluteAddress & 0xFF00) != (highByte << 8)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 Byte Cpu::REL(){
-    return 0x00;
+    relativeAddress = read(pc);
+    pc++;
+
+    if(relativeAddress & 0x80){
+        relativeAddress |= 0xFF00;
+    }
+    return 0;
 }
 
 Byte Cpu::ZPG(){
-    return 0x00;
+    absoluteAddress = read(pc);
+    pc++;
+    absoluteAddress &= 0x00FF;
+    return 0;
 }
 
 Byte Cpu::ZPX(){
-    return 0x00;
+    absoluteAddress = (read(pc) + x);
+    pc++;
+    absoluteAddress &= 0x00FF;
+    return 0;
 }
 
 Byte Cpu::ZPY(){
-    return 0x00;
+    absoluteAddress = (read(pc) + y);
+    pc++;
+    absoluteAddress &= 0x00FF;
+    return 0;
 }
 
 

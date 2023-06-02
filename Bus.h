@@ -1,7 +1,3 @@
-//
-// Created by jacob on 5/20/2023.
-//
-
 #pragma once
 #include "Cpu.h"
 #include <cstdint>

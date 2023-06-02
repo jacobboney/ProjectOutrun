@@ -1,7 +1,3 @@
-//
-// Created by jacob on 5/20/2023.
-//
-
 #include "Bus.h"
 
 Bus::Bus() {

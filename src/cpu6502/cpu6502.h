@@ -81,6 +81,19 @@ class CPU6502 {
     // Instructions
     void brk_impl();     // $00 BRK - 2 Cycles - Break Command
     void ora_zp_ind_x(); // $01 ORA - 6 Cycles - ORA - "OR" Memory with Accumulator - X-Indexed Zero Page Indirect
+                         // $02
+                         // $03
+                         // $04
     void ora_zp();       // $05 ORA - 3 Cycles - ORA - "OR" Memory with Accumulator - Zero Page
     void asl_zp();       // $06 ASL - 5 Cycles - ASL - Arithmetic Shift Left - Zero Page
+                         // $07
+    void php_impl();     // $08 PHP - 3 Cycles - PHP - Push Processor Status onto Stack
+    void ora_imm();      // $09 ORA - 2 Cycles - ORA - "OR" Memory with Accumulator - Immediate
+    void asl_acc();      // $0A ASL - 2 Cycles - ASL - Arithmetic Shift Left - Accumulator
+                         // $0B
+                         // $0C
+    void ora_abs();      // $0D ORA - 4 Cycles - ORA - "OR" Memory with Accumulator - Absolute
+    void asl_abs();      // $0E ASL - 6 Cycles - ASL - Arithmetic Shift Left - Absolute
+                         // $0F
+    void bpl_rel();      // $10 BPL - 2 Cycles (+1 for page cross; +1 for branch) - BPL - Branch if Positive - Relative
 };

@@ -12,8 +12,21 @@ CPU6502::CPU6502()
     // Initialize Instruction Set
     instructions[0x00] = &CPU6502::brk_impl;
     instructions[0x01] = &CPU6502::ora_zp_ind_x;
+    instructions[0x02] = nullptr;
+    instructions[0x03] = nullptr;
+    instructions[0x04] = nullptr;
     instructions[0x05] = &CPU6502::ora_zp;
     instructions[0x06] = &CPU6502::asl_zp;
+    instructions[0x07] = nullptr;
+    instructions[0x08] = &CPU6502::php_impl;
+    instructions[0x09] = &CPU6502::ora_imm;
+    instructions[0x0A] = &CPU6502::asl_acc;
+    instructions[0x0B] = nullptr;
+    instructions[0x0C] = nullptr;
+    instructions[0x0D] = &CPU6502::ora_abs;
+    instructions[0x0E] = &CPU6502::asl_abs;
+    instructions[0x0F] = nullptr;
+    instructions[0x10] = &CPU6502::bpl_rel;
 }
 
 CPU6502::~CPU6502()

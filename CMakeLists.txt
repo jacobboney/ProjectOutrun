@@ -41,4 +41,8 @@ add_executable(${PROJECT_NAME}
     src/main.cpp 
     ${SOURCE_FILES})
 
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION bin
+)
+
 add_subdirectory(tests)

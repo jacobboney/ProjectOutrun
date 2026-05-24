@@ -1,5 +1,7 @@
 include(FetchContent)
 
+project(core6502_tests)
+
 set(gtest_disable_pthreads ON)
 set(gtest_disable_pthreads ON CACHE BOOL "" FORCE)
 
@@ -17,14 +19,14 @@ FetchContent_MakeAvailable(googletest)
 find_package(Threads REQUIRED)
 
 set(TEST_SOUTRCE_FILES
-    instructions_test.cpp
+    instruction_cycles_test.cpp
 )
 
-add_executable(core6502_tests
+add_executable(${PROJECT_NAME}
     ${TEST_SOUTRCE_FILES}
 )
 
-target_link_libraries(core6502_tests
+target_link_libraries(${PROJECT_NAME}
     PRIVATE
         core6502
         GTest::gtest
@@ -34,8 +36,12 @@ target_link_libraries(core6502_tests
 
 # MinGW sometimes still needs this explicitly
 if (MINGW)
-    target_link_libraries(core6502_tests PRIVATE winpthread)
+    target_link_libraries(${PROJECT_NAME} PRIVATE winpthread)
 endif()
 
 include(GoogleTest)
-gtest_discover_tests(core6502_tests)
+gtest_discover_tests(${PROJECT_NAME})
+
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION bin
+)

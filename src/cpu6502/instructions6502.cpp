@@ -405,6 +405,41 @@ void CPU6502::asl_abs()
 
 
 // $10 BPL
-void CPU6502::bpl_rel() {
-    
+void CPU6502::bpl_rel() 
+{
+    switch(microstep) {
+        case 1: {
+            low = read(registers.PC);
+            registers.PC++;
+
+            address = registers.PC;
+
+            if(registers.getFlag(N_NEGATIVE)) {
+                microstep = 0;
+            }
+            else {
+                registers.PC += static_cast<Word>(low);
+                microstep++;
+            }
+
+            cycles++;
+            break;
+        }
+        case 2: {
+            if((address & 0xFF00) != (registers.PC & 0xFF00)) {
+                microstep++;
+            }
+            else {
+                microstep = 0;
+            }
+
+            cycles++;
+            break;
+        }
+        case 3: {
+            microstep = 0;
+            cycles++;
+            break;
+        }
+    }
 };

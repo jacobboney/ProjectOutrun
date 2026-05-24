@@ -634,3 +634,142 @@ TEST(ASL_ABS, Cycle_6) {
 
     EXPECT_EQ(bus.memRead(0x1234), 0x1E);
 }
+
+
+
+
+// $10 BPL (Relative) Instruction Tests
+TEST(BPL_REL, Setup) {
+    testRegisters = Registers6502();
+    testRegisters.PC = 0x8000;
+    testRegisters.P = 0x00; // Negative flag clear, so BPL branches
+
+    bus.getCPU()->testReset();
+    bus.getCPU()->setRegisters(testRegisters);
+
+    bus.getMemory()->clear();
+    bus.memWrite(0x8000, 0x10); // BPL rel opcode
+    bus.memWrite(0x8001, 0x05); // relative offset +5
+
+    EXPECT_EQ(bus.getCPU()->getRegisters(), testRegisters);
+    EXPECT_EQ(bus.memRead(0x8000), 0x10);
+    EXPECT_EQ(bus.memRead(0x8001), 0x05);
+}
+
+TEST(BPL_REL, Cycle_1) {
+    bus.getCPU()->clock();
+
+    EXPECT_EQ(bus.getCPU()->getCycles()   , 1);
+    EXPECT_EQ(bus.getCPU()->getMicrostep(), 1);
+
+    EXPECT_EQ(bus.getCPU()->getOpcode(), 0x10);
+    EXPECT_EQ(bus.getCPU()->getRegisters().PC, 0x8001);
+}
+
+TEST(BPL_REL, Cycle_2) {
+    bus.getCPU()->clock();
+
+    EXPECT_EQ(bus.getCPU()->getCycles()   , 2);
+    EXPECT_EQ(bus.getCPU()->getMicrostep(), 2);
+
+    EXPECT_EQ(bus.getCPU()->getRegisters().PC, 0x8007);
+    EXPECT_EQ(bus.getCPU()->getLow(), 0x05);
+}
+
+TEST(BPL_REL, Cycle_3) {
+    bus.getCPU()->clock();
+
+    EXPECT_EQ(bus.getCPU()->getCycles()   , 3);
+    EXPECT_EQ(bus.getCPU()->getMicrostep(), 0);
+
+    EXPECT_EQ(bus.getCPU()->getRegisters().PC, 0x8007);
+}
+
+TEST(BPL_REL_NOT_TAKEN, Setup) {
+    testRegisters = Registers6502();
+    testRegisters.PC = 0x8000;
+    testRegisters.setFlag(N_NEGATIVE, true);
+
+    bus.getCPU()->testReset();
+    bus.getCPU()->setRegisters(testRegisters);
+
+    bus.getMemory()->clear();
+    bus.memWrite(0x8000, 0x10);
+    bus.memWrite(0x8001, 0x05);
+}
+
+TEST(BPL_REL_NOT_TAKEN, Cycle_1) {
+    bus.getCPU()->clock();
+
+    EXPECT_EQ(bus.getCPU()->getCycles()   , 1);
+    EXPECT_EQ(bus.getCPU()->getMicrostep(), 1);
+
+    EXPECT_EQ(bus.getCPU()->getOpcode(), 0x10);
+    EXPECT_EQ(bus.getCPU()->getRegisters().PC, 0x8001);
+}
+
+TEST(BPL_REL_NOT_TAKEN, Cycle_2) {
+    bus.getCPU()->clock();
+
+    EXPECT_EQ(bus.getCPU()->getCycles()   , 2);
+    EXPECT_EQ(bus.getCPU()->getMicrostep(), 0);
+
+    EXPECT_EQ(bus.getCPU()->getRegisters().PC, 0x8002);
+    EXPECT_EQ(bus.getCPU()->getLow(), 0x05);
+}
+
+TEST(BPL_REL_PAGE_CROSS, Setup) {
+    testRegisters = Registers6502();
+    testRegisters.PC = 0x80FD;
+    testRegisters.P = 0x00; // Negative flag clear, so BPL branches
+
+    bus.getCPU()->testReset();
+    bus.getCPU()->setRegisters(testRegisters);
+
+    bus.getMemory()->clear();
+    bus.memWrite(0x80FD, 0x10); // BPL rel opcode
+    bus.memWrite(0x80FE, 0x05); // relative offset +5
+
+    EXPECT_EQ(bus.getCPU()->getRegisters(), testRegisters);
+    EXPECT_EQ(bus.memRead(0x80FD), 0x10);
+    EXPECT_EQ(bus.memRead(0x80FE), 0x05);
+}
+
+TEST(BPL_REL_PAGE_CROSS, Cycle_1) {
+    bus.getCPU()->clock();
+
+    EXPECT_EQ(bus.getCPU()->getCycles()   , 1);
+    EXPECT_EQ(bus.getCPU()->getMicrostep(), 1);
+
+    EXPECT_EQ(bus.getCPU()->getOpcode(), 0x10);
+    EXPECT_EQ(bus.getCPU()->getRegisters().PC, 0x80FE);
+}
+
+TEST(BPL_REL_PAGE_CROSS, Cycle_2) {
+    bus.getCPU()->clock();
+
+    EXPECT_EQ(bus.getCPU()->getCycles()   , 2);
+    EXPECT_EQ(bus.getCPU()->getMicrostep(), 2);
+
+    EXPECT_EQ(bus.getCPU()->getLow(), 0x05);
+    EXPECT_EQ(bus.getCPU()->getAddress(), 0x80FF);
+    EXPECT_EQ(bus.getCPU()->getRegisters().PC, 0x8104);
+}
+
+TEST(BPL_REL_PAGE_CROSS, Cycle_3) {
+    bus.getCPU()->clock();
+
+    EXPECT_EQ(bus.getCPU()->getCycles()   , 3);
+    EXPECT_EQ(bus.getCPU()->getMicrostep(), 3);
+
+    EXPECT_EQ(bus.getCPU()->getRegisters().PC, 0x8104);
+}
+
+TEST(BPL_REL_PAGE_CROSS, Cycle_4) {
+    bus.getCPU()->clock();
+
+    EXPECT_EQ(bus.getCPU()->getCycles()   , 4);
+    EXPECT_EQ(bus.getCPU()->getMicrostep(), 0);
+
+    EXPECT_EQ(bus.getCPU()->getRegisters().PC, 0x8104);
+}
